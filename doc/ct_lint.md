@@ -67,7 +67,7 @@ ct lint [flags]
                                              expose sensitive data when helm-repo-extra-args contains passwords)
       --remote string                        The name of the Git remote used to identify changed charts (default "origin")
       --since string                         The Git reference used to identify changed charts (default "HEAD")
-      --target-branch string                 The name of the target branch used to identify changed charts (default "master")
+      --target-branch string                 The name of the target branch used to identify changed charts (default "main")
       --use-helmignore                       Use .helmignore when identifying changed charts
       --validate-chart-schema                Enable schema validation of 'Chart.yaml' using Yamale (default true)
       --validate-maintainers                 Enable validation of maintainer account names in chart.yml.
@@ -78,4 +78,3 @@ ct lint [flags]
 ### SEE ALSO
 
 * [ct](ct.md)	 - The Helm chart testing tool
-
