@@ -10,7 +10,7 @@ https://github.com/helm/chart-testing/ +
 [![Go Report Card](https://goreportcard.com/badge/github.com/helm/chart-testing)](https://goreportcard.com/report/github.com/helm/chart-testing)
 ![ci](https://github.com/helm/chart-testing/workflows/ci/badge.svg)
 
-`ct` is the the tool for testing Helm charts.
+`ct` is the tool for testing Helm charts.
 It is meant to be used for linting and testing pull requests.
 It automatically detects charts changed against the target branch.
 
@@ -18,7 +18,7 @@ It automatically detects charts changed against the target branch.
 
 ### Prerequisites
 
-It is recommended to use the provided Docker image which can be [found on Quay](https://quay.io/helmpack/chart-testing/).
+It is recommended to use the provided Docker image which can be [found on Quay](https://quay.io/repository/helmpack/chart-testing).
 It comes with all necessary tools installed.
 
 * [Helm](http://helm.sh)

@@ -20,10 +20,10 @@ import (
 	"testing"
 
 	"github.com/helm/chart-testing/v3/pkg/config"
-	"github.com/helm/chart-testing/v3/pkg/ignore"
 	"github.com/helm/chart-testing/v3/pkg/util"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	helmignore "helm.sh/helm/v3/pkg/ignore"
 )
 
 type fakeGit struct{}
@@ -153,11 +153,11 @@ func newTestingMock(cfg config.Configuration) Testing {
 		accountValidator: fakeAccountValidator{},
 		linter:           fakeMockLinter,
 		helm:             new(fakeHelm),
-		loadRules: func(dir string) (*ignore.Rules, error) {
-			rules := ignore.Empty()
+		loadRules: func(dir string) (*helmignore.Rules, error) {
+			rules := helmignore.Empty()
 			if dir == "test_charts/foo" {
 				var err error
-				rules, err = ignore.Parse(strings.NewReader("Chart.yaml\n"))
+				rules, err = helmignore.Parse(strings.NewReader("Chart.yaml\n"))
 				if err != nil {
 					return nil, err
 				}
@@ -165,7 +165,7 @@ func newTestingMock(cfg config.Configuration) Testing {
 			}
 			if dir == "test_chart_at_multi_level/foo/baz" {
 				var err error
-				rules, err = ignore.Parse(strings.NewReader("Chart.yaml\n"))
+				rules, err = helmignore.Parse(strings.NewReader("Chart.yaml\n"))
 				if err != nil {
 					return nil, err
 				}

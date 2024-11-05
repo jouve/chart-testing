@@ -12,7 +12,7 @@ jobs:
     steps:
 
       - name: checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
 
@@ -20,30 +20,30 @@ jobs:
         uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # v2.0.0
 
       - name: Setup go
-        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version-file: './go.mod'
           check-latest: true
 
-      - uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3.5
+      - uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # v4.2.0
         with:
-          version: v3.12.1
+          version: v3.14.4
 
       - name: Install GoReleaser
-        uses: goreleaser/goreleaser-action@7ec5c2b0c6cdda6e8bbb49444bc797dd33d74dd8 # v5.0.0
+        uses: goreleaser/goreleaser-action@286f3b13b1b49da4ac219696163fb8c1c93e1200 # v6.0.0
         with:
           install-only: true
 
-      #- name: Install cosign
-      #  uses: sigstore/cosign-installer@11086d25041f77fe8fe7b9ea4e48e3b9192b8f19 # v3.1.2
+      # - name: Install cosign
+      #   uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da # v3.7.0
 
       - name: Install syft
-        uses: anchore/sbom-action/download-syft@78fc58e266e87a38d4194b2137a3d4e9bcaf7ca1 # v0.14.0
+        uses: anchore/sbom-action/download-syft@251a468eed47e5082b105c3ba6ee500c0e65a764 # v0.17.6
 
-      #- name: Install k8s Kind
-      #  uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.3.0
-      #  with:
-      #    install_only: true
+      # - name: Install k8s Kind
+      #   uses: helm/kind-action@0025e74a8c7512023d06dc019c617aa3cf561fde # v1.3.0
+      #   with:
+      #     install_only: true
 
       - name: Install tools
         run: |
@@ -64,11 +64,11 @@ jobs:
           go mod tidy
           git diff --exit-code
 
-      #- name: Set up QEMU
-      #  uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
 
-      #- name: Set up Docker Buildx
-      #  uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3.7.1
 
       - name: Build
         run: |
@@ -78,37 +78,37 @@ jobs:
           echo "Building snapshot..."
           ./build.sh
 
-  #check-docs:
-  #  name: check-docs
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-  #    - uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
-  #      with:
-  #        go-version-file: './go.mod'
-  #        check-latest: true
+  # check-docs:
+  #   name: check-docs
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+  #     - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+  #       with:
+  #         go-version-file: './go.mod'
+  #         check-latest: true
 
-  #    - name: generate docs
-  #      run: |
-  #        go build -o ct-bin ./ct/main.go
-  #        ./ct-bin doc-gen
-  #        git_status="$(git status --porcelain)"
-  #        if [[ ${git_status} ]]; then
-  #            echo -e 'Documentation is outdated. Please update the docs\n'
-  #            echo "${git_status}"
-  #            exit 1
-  #        fi
+  #     - name: generate docs
+  #       run: |
+  #         go build -o ct-bin ./ct/main.go
+  #         ./ct-bin doc-gen
+  #         git_status="$(git status --porcelain)"
+  #         if [[ ${git_status} ]]; then
+  #             echo -e 'Documentation is outdated. Please update the docs\n'
+  #             echo "${git_status}"
+  #             exit 1
+  #         fi
 
   golangci:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version-file: './go.mod'
           check-latest: true
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3
+        uses: golangci/golangci-lint-action@971e284b6050e8a5849b72094c50ab08da042db8 # v6.1.1
         with:
-          version: v1.53
+          version: v1.57

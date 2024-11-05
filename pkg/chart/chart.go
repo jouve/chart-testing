@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver"
+	helmignore "helm.sh/helm/v3/pkg/ignore"
 
 	"github.com/helm/chart-testing/v3/pkg/config"
 	"github.com/helm/chart-testing/v3/pkg/exec"
@@ -243,7 +244,7 @@ type Testing struct {
 	directoryLister          DirectoryLister
 	utils                    Utils
 	previousRevisionWorktree string
-	loadRules                func(string) (*ignore.Rules, error)
+	loadRules                func(string) (*helmignore.Rules, error)
 }
 
 // TestResults holds results and overall status
@@ -261,11 +262,12 @@ type TestResult struct {
 // NewTesting creates a new Testing struct with the given config.
 func NewTesting(config config.Configuration, extraSetArgs string) (Testing, error) {
 	procExec := exec.NewProcessExecutor(config.Debug)
-	extraArgs := strings.Fields(config.HelmExtraArgs)
+	helmExtraArgs := strings.Fields(config.HelmExtraArgs)
+	helmLintExtraArgs := strings.Fields(config.HelmLintExtraArgs)
 
 	testing := Testing{
 		config:           config,
-		helm:             tool.NewHelm(procExec, extraArgs, strings.Fields(extraSetArgs)),
+		helm:             tool.NewHelm(procExec, helmExtraArgs, helmLintExtraArgs, strings.Fields(extraSetArgs)),
 		git:              tool.NewGit(procExec),
 		kubectl:          tool.NewKubectl(procExec, config.KubectlTimeout),
 		linter:           tool.NewLinter(procExec),
@@ -371,7 +373,7 @@ func (t *Testing) processCharts(action func(chart *Chart) TestResult) ([]TestRes
 			return results, fmt.Errorf("failed identifying merge base: %w", err)
 		}
 		// Add worktree for the target revision
-		worktreePath, err := os.MkdirTemp("./", "ct_previous_revision")
+		worktreePath, err := os.MkdirTemp("./", "ct-previous-revision")
 		if err != nil {
 			return results, fmt.Errorf("could not create previous revision directory: %w", err)
 		}
@@ -924,7 +926,7 @@ func (t *Testing) ValidateMaintainers(chart *Chart) error {
 func (t *Testing) PrintEventsPodDetailsAndLogs(namespace string, selector string) {
 	util.PrintDelimiterLineToWriter(os.Stdout, "=")
 
-	t.printDetails(namespace, "Events of namespace", ".", func(item string) error {
+	t.printDetails(namespace, "Events of namespace", ".", func(_ string) error {
 		return t.kubectl.GetEvents(namespace)
 	}, namespace)
 
@@ -943,7 +945,7 @@ func (t *Testing) PrintEventsPodDetailsAndLogs(namespace string, selector string
 	}
 
 	for _, pod := range pods {
-		t.printDetails(pod, "Description of pod", "~", func(item string) error {
+		t.printDetails(pod, "Description of pod", "~", func(_ string) error {
 			return t.kubectl.DescribePod(namespace, pod)
 		}, pod)
 

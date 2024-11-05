@@ -1,3 +1,19 @@
+/*
+Copyright The Helm Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package ignore
 
 import (
@@ -5,23 +21,11 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	helmignore "helm.sh/helm/v3/pkg/ignore"
 )
 
-func TestLoadRulesNoHelmignore(t *testing.T) {
-	r, err := LoadRules("chart_no_helmignore")
-	assert.Nil(t, err)
-	// default pattern
-	assert.Len(t, r.patterns, 1)
-}
-
-func TestLoadRulesHelmignore(t *testing.T) {
-	r, err := LoadRules("chart_helmignore")
-	assert.Nil(t, err)
-	assert.Len(t, r.patterns, 3)
-}
-
 func TestFilter(t *testing.T) {
-	rules, err := Parse(strings.NewReader("/bar/\nREADME.md\n"))
+	rules, err := helmignore.Parse(strings.NewReader("/bar/\nREADME.md\n"))
 	assert.Nil(t, err)
 	files := []string{"Chart.yaml", "bar/xxx", "template/svc.yaml", "baz/bar/biz.txt", "README.md"}
 	actual, err := FilterFiles(files, rules)

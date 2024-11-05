@@ -21,21 +21,23 @@ import (
 	"os"
 	"path/filepath"
 	"testing/fstest"
+
+	helmignore "helm.sh/helm/v3/pkg/ignore"
 )
 
-func LoadRules(dir string) (*Rules, error) {
-	rules, err := ParseFile(filepath.Join(dir, HelmIgnore))
+func LoadRules(dir string) (*helmignore.Rules, error) {
+	rules, err := helmignore.ParseFile(filepath.Join(dir, helmignore.HelmIgnore))
 	if err != nil && !os.IsNotExist(err) {
 		return nil, err
 	}
 	if rules == nil {
-		rules = Empty()
+		rules = helmignore.Empty()
 	}
 	rules.AddDefaults()
 	return rules, nil
 }
 
-func FilterFiles(files []string, rules *Rules) ([]string, error) {
+func FilterFiles(files []string, rules *helmignore.Rules) ([]string, error) {
 	fsys := fstest.MapFS{}
 	for _, file := range files {
 		fsys[file] = &fstest.MapFile{}
