@@ -34,3 +34,4 @@ ct list-changed [flags]
 ### SEE ALSO
 
 * [ct](ct.md)	 - The Helm chart testing tool
+

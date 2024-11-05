@@ -1,9 +1,3 @@
-https://github.com/helm/chart-testing/ +
-* https://github.com/helm/chart-testing/pull/591
-* https://github.com/helm/chart-testing/pull/510
-* https://github.com/helm/chart-testing/pull/508
-
-
 # Chart Testing
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
